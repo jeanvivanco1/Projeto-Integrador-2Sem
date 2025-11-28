@@ -75,6 +75,17 @@ def generate_password(length=16, use_upper=True, use_lower=True, use_digits=True
     password = ''.join(random.choice(characters) for _ in range(length))
     return password
 
+def get_yes_no_input(prompt, default=True):
+    """Função auxiliar para obter entrada sim/não do usuário."""
+    while True:
+        response = input(prompt).strip().lower()
+        if response in ('s', 'sim', 'y', 'yes', ''):
+            return True
+        elif response in ('n', 'não', 'nao', 'no'):
+            return False
+        else:
+            print("Por favor, digite 's' para sim ou 'n' para não.")
+
 def main():
     print("--- Password Guardian: Ferramenta de Segurança de Senhas ---")
     
@@ -84,7 +95,7 @@ def main():
         print("2. Gerar Senha Segura")
         print("3. Sair")
         
-        choice = input("Opção: ")
+        choice = input("Opção: ").strip()
         
         if choice == '1':
             password = input("Digite a senha para verificar: ")
@@ -97,18 +108,31 @@ def main():
         
         elif choice == '2':
             try:
-                length = int(input("Comprimento da senha (padrão 16): ") or 16)
-                use_upper = input("Incluir letras maiúsculas? (s/n, padrão s): ").lower() in ('s', '')
-                use_lower = input("Incluir letras minúsculas? (s/n, padrão s): ").lower() in ('s', '')
-                use_digits = input("Incluir números? (s/n, padrão s): ").lower() in ('s', '')
-                use_symbols = input("Incluir símbolos? (s/n, padrão s): ").lower() in ('s', '')
+                # Obter o comprimento da senha
+                length_input = input("Comprimento da senha (padrão 16): ").strip()
+                length = int(length_input) if length_input else 16
                 
+                if length < 1:
+                    print("Erro: O comprimento deve ser pelo menos 1.")
+                    continue
+                
+                # Obter as opções de caracteres com a função auxiliar
+                print("\nEscolha os tipos de caracteres a incluir:")
+                use_upper = get_yes_no_input("Incluir letras maiúsculas? (s/n, padrão s): ", True)
+                use_lower = get_yes_no_input("Incluir letras minúsculas? (s/n, padrão s): ", True)
+                use_digits = get_yes_no_input("Incluir números? (s/n, padrão s): ", True)
+                use_symbols = get_yes_no_input("Incluir símbolos? (s/n, padrão s): ", True)
+                
+                # Gerar a senha
                 generated_password = generate_password(length, use_upper, use_lower, use_digits, use_symbols)
-                print(f"\nSenha Gerada: {generated_password}")
+                print(f"\n✓ Senha Gerada: {generated_password}")
                 
                 # Verifica a força da senha gerada
-                strength, _ = check_password_strength(generated_password)
-                print(f"Força Verificada: {strength}")
+                strength, feedback = check_password_strength(generated_password)
+                print(f"✓ Força Verificada: {strength}")
+                print("\nDetalhes da Força:")
+                for item in feedback:
+                    print(f"  - {item}")
                 
             except ValueError as e:
                 print(f"Erro: {e}")
