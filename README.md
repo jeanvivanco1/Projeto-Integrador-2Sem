@@ -43,13 +43,7 @@ O projeto possui uma estrutura limpa e minimalista:
 password_guardian.py: O coração do projeto. Contém toda a lógica de verificação e geração de senhas.
 
 •
-README.md: Este guia completo de uso e descrição do projeto.
 
-•
-LICENSE: O arquivo de licença (MIT).
-
-•
-requirements.txt: Lista de dependências (vazio, pois usa apenas bibliotecas padrão do Python).
 
 🚀 Instalação e Uso
 
